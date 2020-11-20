@@ -12,10 +12,3 @@ See the [**sklearn-dask-project.ipynb**](./sklearn-project.ipynb) notebook for d
 To run the demo, download this notebook into an empty directory and execute the cells sequentially.
 
 <br><p align="center"><img src="https://github.com/Idan707/demos/blob/master/docs/trees.png" width="500"/></p><br>
-
-<a id="pipeline-output"></a>
-## Pipeline Output
-
-The output plots can be viewed as static HTML files in the [**plots**](./plots) directory.
-
-<br><p align="center"><img src="/Idan707/demos/blob/master/docs/skpipe.png" width="500"/></p><br>
