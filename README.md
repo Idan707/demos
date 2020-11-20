@@ -1,4 +1,4 @@
-# scikit-learn with Dask Demo
+# Scikit-Learn with Dask Demo
 
 This demo demonstrates how to build pipeline using [scikit-learn](https://scikit-learn.org) and dask.
 The combined CI/data/ML pipeline includes the following steps:
