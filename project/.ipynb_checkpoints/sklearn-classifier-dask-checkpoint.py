@@ -31,8 +31,8 @@ from yellowbrick.model_selection import FeatureImportances
 
 def train_model(context: MLClientCtx,
                 dataset: DataItem,
-                dask_address: DataItem,
                 model_pkg_class: str,
+                dask_address: str='',
                 drop_cols: str='',
                 label_column: str = "label",
                 train_validation_size: float = 0.75,
@@ -41,14 +41,14 @@ def train_model(context: MLClientCtx,
                 test_set_key: str = "test_set",
                 plots_dest: str = "plots",
                 file_ext: str = "csv",
-                random_state: int = 42) -> None:
+                random_state: int = 42,) -> None:
     """
     Train a sklearn classifier with Dask
     
     :param context:                 Function context
     :param dataset:                 Raw data file
-    :param dask_address:             Dask client address
     :param model_pkg_class:         Model to train, e.g, "sklearn.ensemble.RandomForestClassifier"
+    :param dask_address:            Dask client object
     :param drop_cols:               Drop unnecessary columns
     :param label_column:            (label) Ground-truth y labels
     :param train_validation_size:   (0.75) Train validation set proportion out of the full dataset
@@ -61,14 +61,9 @@ def train_model(context: MLClientCtx,
     """
     
     context.logger.info("Init Dask")
-    
-    address = dask_address.as_df(df_module=pd)
-    address = address.client[0]
-    
-    client = Client(address)
+    client = Client(dask_address)
     
     context.logger.info("Read Data")
-    
     df = dataset.as_df(df_module=dd)
     
     if drop_cols:
@@ -113,7 +108,7 @@ def train_model(context: MLClientCtx,
     
     with joblib.parallel_backend("dask"):
         
-        model = delayed(model.fit)(**model_config["FIT"]).compute()
+        model = model.fit(**model_config["FIT"])
 
     artifact_path = context.artifact_subpath(models_dest)
     

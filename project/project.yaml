@@ -1,36 +1,32 @@
 name: sk-project-dask
 functions:
-- url: /User/demos/scikit-learn-pipeline-dask/project/sklearn-classifier-dask.py
+- url: /User/demos/demos/project/sklearn-classifier-dask.py
   name: dask_classifier
   kind: job
   image: mlrun/ml-models
-- url: /User/demos/scikit-learn-pipeline-dask/project/daskjob.py
-  name: dsjob
-  kind: job
-  image: mlrun/ml-models
-- url: /User/demos/scikit-learn-pipeline-dask/project/describe.py
+- url: /User/demos/demos/project/describe.py
   name: describe
   kind: job
   image: mlrun/ml-models
 workflows:
 - name: main
-  code: "from kfp import dsl\nfrom mlrun import mount_v3io\n\nfuncs    = {}\nLABELS\
-    \   = \"label\"\nDATA_URL = \"/User/iris.csv\"\n#DATA_URL = \"/User/yellow_tripdata_2019-01_subset.csv\"\
-    \n\n\n# init functions is used to configure function resources and local settings\n\
-    def init_functions(functions: dict, project=None, secrets=None):\n    for f in\
-    \ functions.values():\n        f.apply(mount_v3io())\n        pass\n     \n  \
-    \  \n@dsl.pipeline(\n    name=\"Demo training pipeline\",\n    description=\"\
-    Shows how to use mlrun.\"\n)\ndef kfpipeline():\n    \n    # init_dask\n    dask_init\
-    \ = funcs['dsjob'].as_step(\n        handler=\"hndlr\",\n        params={\"client_url\"\
-    \ : \"db://default/mydask\"},\n        outputs=['client'])\n    \n    # describe\
-    \ data\n    describe = funcs['describe'].as_step(\n        handler=\"describe\"\
-    ,\n        inputs={\"dataset\"   : DATA_URL,\n                \"dask_address\"\
-    \  : dask_init.outputs['client']})\n    \n    # get data, train, test and evaluate\
-    \ \n    train = funcs['dask_classifier'].as_step(\n        name=\"train-skrf\"\
-    ,\n        handler=\"train_model\",\n        params={\"label_column\"    : LABELS,\n\
-    \                \"test_size\"       : 0.10,\n                \"model_pkg_class\"\
-    \ : \"sklearn.ensemble.RandomForestClassifier\"},\n        inputs={\"dataset\"\
-    \   : DATA_URL,\n                \"dask_address\"  : dask_init.outputs['client']},\n\
-    \        outputs=['model', 'test_set'])\n"
+  code: "from kfp import dsl\nfrom mlrun import mount_v3io\n\n# params\nfuncs    \
+    \   = {}\nLABELS      = \"VendorID\"\nDROP        = 'congestion_surcharge'\n#DATA_URL\
+    \    = \"/User/iris.csv\"\nDATA_URL    = \"/User/yellow_tripdata.csv\"\nDASK_CLIENT\
+    \ = \"tcp://mlrun-mydask-ce9d12ee-0.default-tenant:8786\"\n\n# init functions\
+    \ is used to configure function resources and local settings\ndef init_functions(functions:\
+    \ dict, project=None, secrets=None):\n    for f in functions.values():\n     \
+    \   f.apply(mount_v3io())\n        pass\n     \n@dsl.pipeline(\n    name=\"Demo\
+    \ training pipeline\",\n    description=\"Shows how to use mlrun\"\n)\ndef kfpipeline():\n\
+    \    \n    # describe data\n    describe = funcs['describe'].as_step(\n      \
+    \  handler=\"describe\",\n        params={\"dask_address\"  : DASK_CLIENT},\n\
+    \        inputs={\"dataset\"       : DATA_URL}\n    )\n    \n    # get data, train,\
+    \ test and evaluate \n    train = funcs['dask_classifier'].as_step(\n        name=\"\
+    train-skrf\",\n        handler=\"train_model\",\n        params={\"label_column\"\
+    \    : LABELS,\n                \"dask_address\"    : DASK_CLIENT,\n         \
+    \       \"test_size\"       : 0.10,\n                \"model_pkg_class\" : \"\
+    sklearn.ensemble.RandomForestClassifier\",\n                \"drop_cols\"    \
+    \   : DROP},\n        inputs={\"dataset\"         : DATA_URL},\n        outputs=['model',\
+    \ 'test_set']\n    )\n    \n    train.after(describe)\n"
 artifacts: []
-artifact_path: /User/demos/scikit-learn-pipeline-dask
+artifact_path: /User/demos/demos

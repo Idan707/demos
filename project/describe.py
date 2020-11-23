@@ -1,5 +1,6 @@
 from mlrun.execution import MLClientCtx
 from mlrun.datastore import DataItem
+import mlrun
 
 import pandas as pd
 
@@ -8,7 +9,7 @@ from dask import dataframe as dd
 
 def describe(context: MLClientCtx,
                 dataset: DataItem,
-                dask_address: DataItem) -> None:
+                dask_address: str='') -> None:
     """
     Simple describe function with dask 
     
@@ -18,10 +19,7 @@ def describe(context: MLClientCtx,
     """
     
     context.logger.info("Init Dask")
-    
-    address = dask_address.as_df(df_module=pd)
-    address = address.client[0]
-    client = Client(address)
+    client = Client(dask_address)
     
     context.logger.info("Read Data")
     
