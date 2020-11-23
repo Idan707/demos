@@ -13,5 +13,9 @@ To run the demo, download this notebook into an empty directory and execute the 
 
 <br><p align="center"><img src="https://github.com/Idan707/demos/blob/master/docs/trees.png" width="500"/></p><br>
 
-Dask dashboard during training 
+Dask dashboard during training:
 <br><p align="center"><img src="https://github.com/Idan707/demos/blob/dask_pipe/images/dask_dashboard.png" width="500" /></p><br>
+
+Kubeflow pipeline:
+<br><p align="center"><img src="https://github.com/Idan707/demos/blob/dask_pipe/images/pipeline_dashboard.png" width="500" /></p><br>
+
