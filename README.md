@@ -7,7 +7,7 @@ The combined CI/data/ML pipeline includes the following steps:
 - Analyze the data-set features.
 - Train and test the model using dask.
 
-See the [**sklearn-dask-project.ipynb**](./sklearn-project.ipynb) notebook for details.
+See the [**sklearn-dask-project.ipynb**](./sklearn-dask-project.ipynb) notebook for details.
 <br/>
 To run the demo, download this notebook into an empty directory and execute the cells sequentially.
 
